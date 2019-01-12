@@ -26,22 +26,24 @@ all: $(S_OBJECTS) $(C_OBJECTS) link update_image
 
 link:
 	@echo Linking kernel...
-	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o boogie_kernel
+	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o build/boogie_kernel
 
 .PHONY:clean
 clean:
-	$(RM) $(S_OBJECTS) $(C_OBJECTS) boogie_kernel
+	$(RM) $(S_OBJECTS) $(C_OBJECTS) build/*
+	touch build/.gitkeep
 
 .PHONY:update_image
 update_image:
-	sudo mount floppy.img /mnt/boogie_img_dev
-	sudo cp boogie_kernel /mnt/boogie_img_dev/boogie_kernel
+	cp image/floppy.img build/boogie.img
+	sudo mount build/boogie.img /mnt/boogie_img_dev
+	sudo cp build/boogie_kernel /mnt/boogie_img_dev/boogie_kernel
 	sleep 1
 	sudo umount /mnt/boogie_img_dev
 
 .PHONY:mount_image
 mount_image:
-	sudo mount floppy.img /mnt/boogie_img_dev
+	sudo mount build/boogie.img /mnt/boogie_img_dev
 
 .PHONY:umount_image
 umount_image:
@@ -49,7 +51,7 @@ umount_image:
 
 .PHONY:qemu
 qemu:
-	qemu-system-x86_64 -fda floppy.img -boot a	
+	qemu-system-x86_64 -fda build/boogie.img -boot a	
 	#add '-nographic' option if using server of linux distro, such as fedora-server,or "gtk initialization failed" error will occur.
 
 .PHONY:bochs
@@ -58,7 +60,7 @@ bochs:
 
 .PHONY:debug
 debug:
-	qemu-system-x86_64 -S -s -fda floppy.img -boot a &
+	qemu-system-x86_64 -S -s -fda build/floppy.img -boot a &
 	sleep 1
 	cgdb -x scripts/gdbinit
 
