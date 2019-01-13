@@ -25,17 +25,18 @@ all: $(S_OBJECTS) $(C_OBJECTS) link update_image
 	$(ASM) $(ASM_FLAGS) $<
 
 link:
+	if [ ! -d "./build" ]; then mkdir ./build; fi
 	@echo Linking kernel...
 	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o build/boogie_kernel
 
 .PHONY:clean
 clean:
 	$(RM) $(S_OBJECTS) $(C_OBJECTS) build/*
-	touch build/.gitkeep
 
 .PHONY:update_image
 update_image:
 	cp image/floppy.img build/boogie.img
+	if [ ! -d "/mnt/boogie_img_dev" ]; then sudo mkdir /mnt/boogie_img_dev; fi
 	sudo mount build/boogie.img /mnt/boogie_img_dev
 	sudo cp build/boogie_kernel /mnt/boogie_img_dev/boogie_kernel
 	sleep 1
@@ -52,7 +53,11 @@ umount_image:
 .PHONY:qemu
 qemu:
 	qemu-system-x86_64 -fda build/boogie.img -boot a	
-	#add '-nographic' option if using server of linux distro, such as fedora-server,or "gtk initialization failed" error will occur.
+
+.PHONY:qemu-without-gui
+qemu-without-gui:
+	qemu-system-x86_64 -fda build/boogie.img -boot a -nographic
+
 
 .PHONY:bochs
 bochs:
