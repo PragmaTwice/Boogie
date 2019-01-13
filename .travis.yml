@@ -15,4 +15,4 @@ addons:
 
 script:
   - make
-  - make qemu
+  - make qemu-without-gui

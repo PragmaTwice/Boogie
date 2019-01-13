@@ -53,7 +53,11 @@ umount_image:
 .PHONY:qemu
 qemu:
 	qemu-system-x86_64 -fda build/boogie.img -boot a	
-	#add '-nographic' option if using server of linux distro, such as fedora-server,or "gtk initialization failed" error will occur.
+
+.PHONY:qemu-without-gui
+qemu-without-gui:
+	qemu-system-x86_64 -fda build/boogie.img -boot a -nographic
+
 
 .PHONY:bochs
 bochs:
