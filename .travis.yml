@@ -11,8 +11,7 @@ addons:
     packages:
       - gcc
       - nasm
-      - qemu
+      - ld
 
 script:
   - make
-  - make qemu-without-gui
