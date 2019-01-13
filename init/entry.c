@@ -1,12 +1,15 @@
 #include "console.h"
+#include "debug.h"
 
 int kern_entry()
 {
+	init_debug();
+
 	console_clear();
 
-	console_write_color("Hello, Boogie OS!\n", rc_black, rc_green);
+	printk_color(rc_black, rc_green, "Hello, Boogie OS!\n");
+
+	panic("test");
 
 	return 0;
 }
-
-
