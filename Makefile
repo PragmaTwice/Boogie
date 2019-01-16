@@ -52,12 +52,7 @@ umount_image:
 
 .PHONY:qemu
 qemu:
-	qemu-system-x86_64 -fda build/boogie.img -boot a	
-
-.PHONY:qemu-without-gui
-qemu-without-gui:
-	qemu-system-x86_64 -fda build/boogie.img -boot a -nographic
-
+	qemu-system-i386 -fda build/boogie.img -boot a
 
 .PHONY:bochs
 bochs:
@@ -65,7 +60,7 @@ bochs:
 
 .PHONY:debug
 debug:
-	qemu-system-x86_64 -S -s -fda build/floppy.img -boot a &
+	qemu-system-i386 -S -s -fda build/boogie.img -boot a &
 	sleep 1
 	cgdb -x scripts/gdbinit
 
