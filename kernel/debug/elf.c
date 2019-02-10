@@ -7,7 +7,7 @@ elf_t elf_from_multiboot(multiboot_t *mb)
 {
 	int i;
 	elf_t elf;
-	elf_section_header_t *sh = (elf_section_header_t*)mb->addr;
+	elf_section_header_t *sh = (elf_section_header_t *)mb->addr;
 
 	uint32_t shstrtab = sh[mb->shndx].addr;
 	for (i = 0; i < mb->num; i++) {
@@ -18,7 +18,7 @@ elf_t elf_from_multiboot(multiboot_t *mb)
 			elf.strtabsz = sh[i].size;
 		}
 		if (strcmp(name, ".symtab") == 0) {
-			elf.symtab = (elf_symbol_t*)sh[i].addr;
+			elf.symtab = (elf_symbol_t *)sh[i].addr;
 			elf.symtabsz = sh[i].size;
 		}
 	}
@@ -43,4 +43,3 @@ const char *elf_lookup_symbol(uint32_t addr, elf_t *elf)
 
 	return NULL;
 }
-
