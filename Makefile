@@ -54,10 +54,6 @@ umount_image:
 qemu:
 	qemu-system-i386 -fda build/boogie.img -boot a
 
-.PHONY:bochs
-bochs:
-	bochs -f scripts/bochsrc.txt
-
 .PHONY:debug
 debug:
 	qemu-system-i386 -S -s -fda build/boogie.img -boot a &
