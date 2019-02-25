@@ -23,6 +23,9 @@
 extern uint8_t kern_start[];
 extern uint8_t kern_end[];
 
+// 内核栈的栈顶
+extern uint32_t kern_stack_top;
+
 // 动态分配物理内存页的总数
 extern uint32_t phy_page_count;
 
@@ -39,3 +42,4 @@ uint32_t pmm_alloc_page();
 void pmm_free_page(uint32_t p);
 
 #endif 	// INCLUDE_PMM_H
+
