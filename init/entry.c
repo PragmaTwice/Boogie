@@ -70,12 +70,24 @@ __attribute__((section(".init.text"))) void kern_entry()
 
 int flag = 0;
 
-int thread(void *arg)
+int threadA(void *arg)
 {
 	while (1) {
 		if (flag == 1) {
-			printk_color(rc_black, rc_green, "B");
+			printk_color(rc_black, rc_red, "A");
 			flag = 0;
+		}
+	}
+
+	return 0;
+}
+
+int threadB(void *arg)
+{
+	while (1) {
+		if (flag == 0) {
+			printk_color(rc_black, rc_green, "B");
+			flag = 1;
 		}
 	}
 
@@ -108,17 +120,11 @@ void kern_init()
 
 	init_sched();
 
-	kernel_thread(thread, NULL);
+	kernel_thread(threadA, NULL);
+	kernel_thread(threadB, NULL);
 
 	// 开启中断
 	enable_intr();
-
-	while (1) {
-		if (flag == 0) {
-			printk_color(rc_black, rc_red, "A");
-			flag = 1;
-		}
-	}
 
 	while (1) {
 		asm volatile ("hlt");
