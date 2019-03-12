@@ -18,6 +18,4 @@ char getchar(void)
         }
         
         return ch;
-
-        return 0;
 }
