@@ -18,4 +18,11 @@ void enable_intr();
 // 关闭中断
 void disable_intr();
 
+// 执行CPU空操作
+static inline void cpu_hlt(void)
+{
+        __asm__ volatile ("hlt");
+}
+
+
 #endif // INCLUDE_COMMON_H_
