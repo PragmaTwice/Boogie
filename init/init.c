@@ -12,6 +12,7 @@
 #include "sched.h"
 #include "char_dev.h"
 #include "kio.h"
+#include "shell.h"
 
 void show_init(const char *name, void (*init_func)())
 {
@@ -44,6 +45,7 @@ void kern_init()
 
 	show_logo();
 
+	// 初始化工作
 	printk_color(rc_black, rc_light_brown, "Boogie Initialization:\n\n");
 
 	show_init("Debug Module", init_debug);
@@ -63,13 +65,12 @@ void kern_init()
 
 	// 开启中断
 	enable_intr();
-
-	printk("%c\n", getchar());
-	printk("hello\n");
-
-
-	while (1) {
-		cpu_hlt();
-	}
+	
+	// 进入 shell 的提示
+	printk("\n");
+	printk_color(rc_black, rc_green, "press any key to enter shell...\n");
+	getch();
+	
+	init_shell();
 }
 
