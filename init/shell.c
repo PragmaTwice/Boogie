@@ -19,30 +19,14 @@ void parse_command(char *line, char **opcode, char **oprand)
 
 }
 
-struct core_command
-{
-    char *name;
-    int (*func)(char *);
-};
-
-int echo(char * str)
-{
-    printk("%s\n", str);
-    return 0;
-}
-
-struct core_command commands[] = {
-    { "echo", echo }
-};
-
 int call_command(char *opcode, char *oprand)
 {
     int i = 0;
-    for(; i < sizeof commands / sizeof(struct core_command); ++i)
+    for(; i < commands.size; ++i)
     {
-        if(strcmp(opcode, commands[i].name) == 0)
+        if(strcmp(opcode, commands.list[i].name) == 0)
         {
-            return commands[i].func(oprand);
+            return commands.list[i].func(oprand);
         }
     }
 

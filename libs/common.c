@@ -16,6 +16,12 @@ inline uint8_t inb(uint16_t port)
 	return ret;
 }
 
+// 端口写一个字
+inline void outw(uint16_t port, uint16_t value)
+{
+	asm volatile ("outw %1, %0" : : "dN" (port), "a" (value));
+}
+
 // 端口读一个字
 inline uint16_t inw(uint16_t port)
 {
