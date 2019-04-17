@@ -4,7 +4,7 @@
 struct core_command
 {
     char *name;
-    int (*func)(char *);
+    int (*func)(int, char **);
 };
 
 struct command_list

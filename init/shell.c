@@ -4,33 +4,91 @@
 #include "ctype.h"
 #include "string.h"
 
-void parse_command(char *line, char **opcode, char **oprand)
+// returns length of words
+int parse_command(char *line, char *words[])
 {
-    for(;*line != 0 && isspace(*line); ++line);
-    *opcode = line;
+    // status machine
+    enum { word, space, quoted_begin, quoted } status = space;
 
-    for(;*line != 0 && !isspace(*line); ++line);
-    char *end = line;
+    int length = 0;
+    for(char *i = line; *i != 0; ++i)
+    {
+        switch(status)
+        {
+            case word:
+                if(isspace(*i))
+                {
+                    status = space;
+                    *i = 0;
+                }
 
-    for(;*line != 0 && isspace(*line); ++line);
-    *oprand = line;
+                break;
+            case space:
+                if(!isspace(*i))
+                {
+                    if(*i == '"')
+                    {
+                        status = quoted_begin;
+                    }
+                    else
+                    {
+                        status = word;
+                        *words = i;
+                        words++;
+                        length++;
+                    }
+                    
+                }
+                
+                break;
+            case quoted_begin:
+                if(*i == '"')
+                {
+                    status = space;
+                    *i = 0;
+                    *words = i;
+                    words++;
+                    length++;
+                }
+                else
+                {
+                    status = quoted;
+                    *words = i;
+                    words++;
+                    length++;
+                }
+                
 
-    *end = 0;
+                break;
+            case quoted:
+                if(*i == '"')
+                {
+                    status = space;
+                    *i = 0;
+                }
+
+                break;
+        }
+    }
+
+    return length;
 
 }
 
-int call_command(char *opcode, char *oprand)
+int call_command(int length, char *words[])
 {
     int i = 0;
     for(; i < commands.size; ++i)
     {
-        if(strcmp(opcode, commands.list[i].name) == 0)
+        if(strcmp(words[0], commands.list[i].name) == 0)
         {
-            return commands.list[i].func(oprand);
+            words ++;
+            length --;
+            return commands.list[i].func(length, words);
         }
     }
 
-    printk("error: cannot find \"%s\"\n", opcode);
+    printk("error: cannot find \"%s\"\n", words[0]);
     return -1;
 }
 
@@ -40,14 +98,16 @@ void init_shell()
 
     char line[1024];
 
+    char *words [1024];
+    int length = 0;
+
     while(1)
     {
         printk_color(rc_black, rc_light_blue, "Boogie $ ");
         getstrln(line);
         
-        char *opcode = 0, *oprand = 0;
-        parse_command(line, &opcode, &oprand);
+        length = parse_command(line, words);
 
-        call_command(opcode, oprand);
+        call_command(length, words);
     }
 }

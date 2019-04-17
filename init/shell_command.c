@@ -4,19 +4,24 @@
 #include "string.h"
 #include "heap.h"
 
-int echo(char * str)
+int echo(int len, char * arg[])
 {
-    printk("%s\n", str);
+    for(int i = 0; i < len; ++i)
+    {
+        printk("%s ", arg[i]);
+    }
+
+    printk("\n");
     return 0;
 }
 
-int clear(char * str)
+int clear(int len, char * arg[])
 {
     console_clear();
     return 0;
 }
 
-int shutdown(char * str)
+int shutdown(int len, char * arg[])
 {
     outw(0x604, 0x2000);
 
@@ -220,9 +225,9 @@ int calcExpression(char * p) {
     );
 }
 
-int calc(char * str)
+int calc(int len, char * arg[])
 {
-    int result = calcExpression(str);
+    int result = calcExpression(arg[0]);
     printk("%d\n", result);
 
     return 0;
